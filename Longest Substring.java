@@ -9,14 +9,12 @@
             for(int i=0; i<s.length(); i++){
                 target += s.charAt(i);
                 if(isUnique(target)){
-                    // System.out.println(target);
                     if(answer<target.length()){
                         
                         answer = target.length();
                     }
                 }else{
-                    target = target.substring( target.indexOf(s.charAt(i)) + 1);  
-                    // System.out.println(target);
+                    target = target.substring( target.indexOf(s.charAt(i)) + 1);
                 }
             
             }
@@ -24,7 +22,6 @@
         }
 
         public boolean isUnique(String target){
-            // System.out.println(target);
             boolean[] chars = new boolean[MAX_CHAR];
             Arrays.fill(chars, false);
 
