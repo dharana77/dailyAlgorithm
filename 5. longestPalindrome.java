@@ -1,30 +1,29 @@
 class Solution {
-    private int mx = 0;
-    private String answer = "";
+
+    int index, maxLen;
 
     public String longestPalindrome(String s) {
-        answer = Character.toString(s.charAt(0));
-        for(int i=0; i<s.length(); i++){
-            for(int j=i+1; j<=s.length(); j++){
-                String t = s.substring(i,j);
-                // System.out.println(t);
-                if(isPalindrome(t)){
-                    if(mx<t.length()){
-                        mx = t.length();
-                        answer = t;
-                    }
-                }
-            }
+        int len = s.length();
+        if(len<2){
+            return s;
         }
-        return answer;
+
+        for(int i = 0 ; i  < len - 1 ; i++){
+            find(s,i,i);
+            find(s,i,i+1);
+        }
+        return s.substring(index,index+maxLen);
+
     }
 
-    public boolean isPalindrome(String s){
-        for(int i=0; i<=s.length()/2; i++){
-            if(s.charAt(i)!= s.charAt(s.length()-1-i)){
-                return false;
-            }
+    public void find(String s, int i, int j){
+        while(i >= 0 && j < s.length() && s.charAt(i) == s.charAt(j)){
+            i--;
+            j++;
         }
-        return true;
+        if(maxLen < j-i-1){
+            index = i+1;
+            maxLen = j - i -1;
+        }
     }
 }
