@@ -1,39 +1,36 @@
 def solution(id_list, report, k):
     answer = []
-    final_reported_dict = {id:0 for id in id_list}
-    final_banned_list = {id:0 for id in id_list}
-    report.sort()
-    #id_list에 존재하는 id마다
-    for target in id_list:
-        #첫번째 모든 횟수를 구하고
-        report_dict = {id:0 for id in id_list}
-        for re in report:
-            reporter, reported = re.split(" ")
-            if target == reporter:
-                report_dict[reported]+=1
-        #report횟수가 1회이상이면 report_list에 해당 id 추가
-        report_list = []
-        for reported, number in report_dict.items():
-            if number>0:
-                report_list.append(reported)
-        
-        #최종 신고된 리스트에 해당 아이디값 1씩 추가
-        for reported in report_list:
-            final_reported_dict[reported]+=1
-        
+    reported_dict = {id:[] for id in id_list}
+    reported_final_result = {id:0 for id in id_list}
+    banned_list = {id:0 for id in id_list}
+    # report.sort()
     
-    for reported, reported_number in final_reported_dict.items():
-        print(reporter, reported)
-        if reported_number >=k:
-            final_banned_list[reported]+=1
+    for report_info in report:
+        #신고자, 신고당한 사람
+        reporter, reported = report_info.split(" ")
+        reported_dict[reporter].append(reported)
     
-    for target in id_list:
+    #각 추가한 결과를 set으로 중복제거후 다시 list로 변환해 넣어줌
+    for reporter, reported  in reported_dict.items():
+        reported_dict[reporter] = list(set(reported))
+        # print(reported_dict[reporter])
+    
+    #신고자별 중복제거 신고ID dict값 얻어오기 완료후
+    #ID별 최종 신고당한 횟수로 정지여부 확인
+    
+    for reporter, reporteds in reported_dict.items():
+        for reported in reporteds:
+            reported_final_result[reported]+=1
+    
+    for id in id_list:
+        if reported_final_result[id]>=k:
+            banned_list[id]=1
+    
+    for id in id_list:
         answer.append(0)
-        
-        for re in report:
-            reporter, reported = re.split(" ")
-            if target == reporter:
-                if final_banned_list[reported]>0:
-                    answer[-1]+=1
-        
+        reporteds = reported_dict[id]
+        # print(reporter, reporteds)
+        for reported in reporteds:
+            if banned_list[reported]==1:
+                answer[-1]+=1
     return answer
