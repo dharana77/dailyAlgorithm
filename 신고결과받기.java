@@ -6,22 +6,25 @@ class Solution {
         HashMap<String, List<String>> reportedListById = new HashMap<String, List<String>>();
         
         for(int i=0; i<id_list.length; i++){
-            // System.out.println(id_list[i]);
-            List<String> reported_list = new ArrayList<String>();
-            
-            for(int j=0; j<report.length; j++){
-                String reporter = report[j].split(" ")[0];
-                String reported = report[j].split(" ")[1];
-                // System.out.println(id_list[i]);
-                if(reporter.equals(id_list[i])){
-                    reported_list.add(reported);
-                    
-                }
-            }
-            Set<String> reported = new HashSet<String>(reported_list);
-            List<String> set_reported = new ArrayList<String>(reported);
-            reportedListById.put(id_list[i], set_reported);
+            List<String>emptyList = new ArrayList<String>();
+            reportedListById.put(id_list[i], emptyList);
         }
+        
+        for(int j=0; j<report.length; j++){
+            String reporter = report[j].split(" ")[0];
+            String reported = report[j].split(" ")[1];
+            List<String> value = reportedListById.get(reporter);
+            value.add(reported);
+            reportedListById.put(reporter, value);
+        }
+        Set<String>reportSet = reportedListById.keySet();
+        for(String reporter: reportSet){
+            Set<String> reported = new HashSet<String>(reportedListById.get(reporter));
+            List<String> set_reported = new ArrayList<String>(reported);
+            reportedListById.put(reporter, set_reported);
+        }
+    
+        
         // Set<String> keySet = reportedListById.keySet();
         // for(String key: keySet){
         //     System.out.println(key);
