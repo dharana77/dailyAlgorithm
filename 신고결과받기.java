@@ -12,14 +12,21 @@ class Solution {
             for(int j=0; j<report.length; j++){
                 String reporter = report[j].split(" ")[0];
                 String reported = report[j].split(" ")[1];
-                if(reporter == id_list[i]){
+                // System.out.println(id_list[i]);
+                if(reporter.equals(id_list[i])){
                     reported_list.add(reported);
+                    
                 }
             }
             Set<String> reported = new HashSet<String>(reported_list);
             List<String> set_reported = new ArrayList<String>(reported);
             reportedListById.put(id_list[i], set_reported);
         }
+        // Set<String> keySet = reportedListById.keySet();
+        // for(String key: keySet){
+        //     System.out.println(key);
+        //     System.out.println(reportedListById.get(key));
+        // }
         HashMap<String, Integer> reportedCountById = new HashMap<String, Integer>();
         for(int i=0; i<id_list.length; i++){
             reportedCountById.put(id_list[i], 0);
@@ -43,7 +50,10 @@ class Solution {
             answerList.add(ct);
         }
         int[] answer = new int[answerList.size()];
-        answer = answerList.toArray(new int[0]);
+        for(int i=0; i<answerList.size(); i++){
+            answer[i] = answerList.get(i);
+        }
+        
         return answer;
     }
 }
