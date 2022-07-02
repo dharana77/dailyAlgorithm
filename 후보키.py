@@ -1,37 +1,26 @@
-from itertools import combinations
-from collections import defaultdict
+from itertools import combinations as combi
 
 def solution(relation):
-    answer = 0
-    for count in range(1,len(relation[0])+1):
-        predictable_combination_length = len(list(combinations(relation[0], count)))
-        pred_combs_indexes = list(combinations(range(len(relation[0])), count))
-        # print(pred_combs_indexes)
-        to_delete_values = []
-        for i in range(predictable_combination_length):
-            count_table = defaultdict(int)
-            index_table = defaultdict(tuple)
-            for idx, _ in enumerate(relation):
-                pred_combinations = list(combinations(relation[idx], count))
-                count_table[pred_combinations[i]]+=1
-                # print(pred_combinations[i], type(pred_combs_indexes[i]))
-                index_table[pred_combinations[i]]=pred_combs_indexes[i]
+    row = len(relation)
+    col = len(relation[0])
+    
+    candidates = []
+    for i in range(1, col+1):
+        candidates.extend(combi(range(col), i))
+    
+    
+    unique = []
+    for candi in candidates:
+        tmp = [tuple(item[i] for i in candi) for item in relation]
+        if len(set(tmp)) == row:
+            unique.append(candi)
+    
+    print(unique)
+    answer = set(unique)
+    for i in range(len(unique)):
+        for j in range(i+1,len(unique)):
+            if len(unique[i]) == len(set(unique[i]) & set(unique[j])):
+                answer.discard(unique[j])
+    
+    return len(answer)
                 
-            con = True
-            # print(count_table)
-            for _, key in enumerate(count_table):
-                if count_table[key]!= 1:
-                    con = False
-            print(count_table)
-            if con:
-                for idx, key in enumerate(index_table):
-                    new_relation = []
-                    for j in range(len(relation[idx])):
-                        if j not in index_table[key]:
-                            new_relation.append(relation[idx][j])
-                    print(relation[idx], new_relation)
-                    # relation[idx] = new_relation
-                    
-                answer+=1
-                
-    return answer
