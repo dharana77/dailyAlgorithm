@@ -15,7 +15,6 @@ def solution(relation):
         if len(set(tmp)) == row:
             unique.append(candi)
     
-    print(unique)
     answer = set(unique)
     for i in range(len(unique)):
         for j in range(i+1,len(unique)):
