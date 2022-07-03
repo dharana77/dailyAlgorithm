@@ -1,5 +1,6 @@
 #2:12
-#3:37
+from collections import defaultdict
+
 def solution(gems):
     answer = []
     unique = set()
@@ -13,15 +14,34 @@ def solution(gems):
     temp_count = set()
     i =0
     j =1
-    while i < len(gems) and j <=len(gems):
-        target = gems[i:j]
-        # print(i,j, target)
-        if len(set(target)) == mx:
-            if (j-i)<mn:
-                # print("ans",i+1,j)
+    kind_dict = {gems[0]: 1}
+    print(mx)
+    while i < len(gems) and j <len(gems):
+        if len(kind_dict) == mx:
+            if (j-i)<mn and (j-i)>0:
                 mn = j-i
                 answer = [i+1,j]
+            kind_dict[gems[i]] = kind_dict.get(gems[i],0) - 1
+            if kind_dict[gems[i]]==0:
+                del kind_dict[gems[i]]
             i+=1
         else:
+            kind_dict[gems[j]] = kind_dict.get(gems[j],0) + 1
             j+=1
+            
+
+    if len(kind_dict) == mx:
+        if (j-i)<mn and (j-i)>=0:
+            mn = j-i
+            answer = [i+1,j]
+    
+    while i < len(gems):
+        if len(kind_dict)==mx:
+            if(j-i)<mn:
+                answer = [i+1, j]
+        kind_dict[gems[i]]-=1
+        if kind_dict[gems[i]]==0:
+            del kind_dict[gems[i]]
+        i+=1
+    
     return answer
