@@ -1,48 +1,36 @@
-from collections import defaultdict
-
+from itertools import permutations
 
 def solution(user_id, banned_id):
     answer = 0
-    banned_set = set()
-    bid_dict = defaultdict(set)
-    visited = {}
-    for bid in banned_id:
-        for uid in user_id:
-            if is_same_format(bid, uid) :
-                bid_dict[bid].add(uid)
-                visited[bid + ":" + uid] = False
-                
-    lst = [value for key, value in bid_dict.items()]
-    total_result = set()
+    all_lists = list(permutations(user_id, len(banned_id)))
     
-    # print(bid_dict)
-    while True:
-        visited_ct = 0
-        for v in visited.values():
-            if v:
-                visited_ct+=1
-        if visited_ct == len(visited):
-            break
-        
-        result = set()
-        for bid in banned_id:
-            # print(bid)
-            for value in bid_dict[bid]:
-                if not visited[bid+":"+value] and value not in result:
-                    print(bid,value)
-                    result.add(value)
-                    visited[bid+":"+value]=True
-                    break
-        
-        total_result.add(tuple(result))
-    answer= len(total_result)
+    banned_set = set()
+    for per in all_lists:
+        con, per = check(per,banned_id,banned_set)
+        # print("per",per)
+        if con:
+            # print("sec per", per)
+            banned_set.add(tuple(per))
+    # print(banned_set)
+        # print("why")
+    answer = len(banned_set)
     return answer
 
-def is_same_format(bid: str, uid: str):
-    if len(bid) != len(uid):
+def check(per, banned_id, banned_set):
+    for idx, p in enumerate(per):
+        if not compare(p, banned_id[idx]):
+            return False, per
+    per = set(sorted(list(per)))
+    if len(per & banned_set)!=0:
+        return False, per
+    
+    return True, per
+
+def compare(p, banned_id):
+    if len(p)!= len(banned_id):
         return False
-    for idx, bstr in enumerate(bid):
-        if bid[idx]!=uid[idx]:
-            if bid[idx]!='*' and uid[idx]!='*':
+    for idx, v in enumerate(p):
+        if v!=banned_id[idx]:
+            if banned_id[idx]!="*":
                 return False
     return True
