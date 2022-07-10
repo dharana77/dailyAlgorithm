@@ -1,37 +1,55 @@
-#10:26 ~
-from collections import defaultdict, deque
+#1차 12:53~01:32(40분)
+from collections import defaultdict
 from copy import deepcopy
 
-is_wolf = list()
-num_to_edges = defaultdict(list)
-max_sheep = 0
+answer = 0
+wolves = list()
+nodes = defaultdict(list)
+visited = list()
+
+def solution(info, edges):
+    global answer
+    global wolves
+    global nodes
+    global visited
+    
+    wolves = info
+    visited = [0]* (len(info) + 1)
+    # print(wolves)
+    for edge in edges:
+        start = edge[0]
+        end = edge[1]
+        nodes[start].append(end)
+    # print(nodes)
+    # print(len(visited))
+    visit_node(0,0,0, [])
+    return answer
 
 
-def find_max_recursive(current_loc, nsheep, nwolf, can_go):
-    global max_sheep
-    if is_wolf[current_loc]:
-        nwolf+=1
+def visit_node(start, sheep_count, wolf_count, nexts):
+    global wolves
+    global nodes
+    global answer
+    global visited
+    # print(start, wolves)
+    print("Start", start)
+    # visited[start] = 1
+    if wolves[start] == 0:
+        sheep_count+=1
+        print(sheep_count)
     else:
-        nsheep+=1
-        max_sheep = max(max_sheep, nsheep)
-        
-    if nsheep <= nwolf:
+        wolf_count+=1
+    
+    if wolf_count >= sheep_count:
         return
     
-    can_go.extend(num_to_edges[current_loc])
-    for next_loc in can_go:
-        find_max_recursive(next_loc, nsheep, nwolf, can_go=[loc for loc in can_go if loc!= next_loc])
-                           
-                           
-def solution(info, edges):
-    global is_wolf, num_to_edges, max_sheep
-    is_wolf = info
+    if answer < sheep_count:
+        answer = sheep_count
     
-    for edge_from, edge_to in edges:
-        num_to_edges[edge_from].append(edge_to)
-    print(num_to_edges)
-    for i, v in num_to_edges.items():
-        print(i,":",v)
-    find_max_recursive(0, 0, 0, [])
+    nexts.extend(nodes[start])
     
-    return max_sheep
+    for next_node in nexts:
+        # if visited[next_node]!=1:
+        visit_node(next_node, sheep_count, wolf_count, nexts)
+        
+    
