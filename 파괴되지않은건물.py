@@ -1,22 +1,33 @@
 #21:53 ~10:03 효율성 fail
 def solution(board, skill):
     answer = 0
-    for sk in skill:
-        types = sk[0] #1은 공격, 2는 회복
-        r1 = sk[1] #r1,c1부터 r2,c2까지 직사각형 범위 건물 내구도에 영향
-        c1 = sk[2]
-        r2 = sk[3]
-        c2 = sk[4]
-        degree = sk[5] #degree만큼 영향
+    temp = [[0] * (len(board[0])+1) for i in range(len(board[0]) +1)]
+    
+    for types, r1, c1, r2, c2, degree in skill:
         if types==1:
             degree=-degree
-        for i in range(r1,r2+1):
-            for j in range(c1,c2+1):
-                board[i][j]+=degree
-        # print(board)
+        # print(types, r1,c1, r2,c2, degree)
+        temp[r1][c1]+=degree
+        temp[r1][c2+1]-=degree
+        temp[r2+1][c1]-=degree
+        temp[r2+1][c2+1]+=degree
+    # print(temp)
+    # print(temp)
     for i in range(len(board)):
         for j in range(len(board[0])):
+            temp[i][j+1] += temp[i][j]
+    # print(temp)
+    
+    for j in range(len(board[0])):
+        for i in range(len(board)):
+            temp[i+1][j] += temp[i][j]
+    
+    # print(temp)
+    for i in range(len(board)):
+        for j in range(len(board[0])):
+            board[i][j]+=temp[i][j]
             if board[i][j]>=1:
                 answer+=1
-        
+                
+    # print(board)
     return answer
