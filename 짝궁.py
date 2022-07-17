@@ -1,4 +1,4 @@
-
+#시간초과
 def solution(X, Y):
     answer = ''
     x_number_count = {key:0 for key in range(0,10)}
