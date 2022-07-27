@@ -11,39 +11,42 @@ class Solution {
 
         int answer = 0;
         int ln = topping.length;
+        int[] leftCount = new int[10001];
+        int[] rightCount = new int[10001];
+        int[] leftUniqueCount = new int[ln];
+        int[] rightUniqueCount = new int[ln];
 
-        for(int i=0;i<ln;i++){
-            Map<String, List<Integer>> sliced = slice(i, topping);
-            
-            int firstUniqueCount = getUniqueCount(sliced.get("first"));
-            int secondUniqueCount = getUniqueCount(sliced.get("second"));
-            
-            if (firstUniqueCount == secondUniqueCount){
+        //왼쪽
+        int uniqueCount = 0;
+        for(int i=0; i<ln; i++){
+            int target = topping[i];
+            if(leftCount[target]==0){
+                uniqueCount+=1;
+            }
+            leftCount[target]+=1;
+            leftUniqueCount[i] = uniqueCount;
+        }
+
+        //오른쪽
+        uniqueCount = 0;
+        for(int i=ln-1; i>=0; i--){
+            int target = topping[i];
+            if(rightCount[target]==0){
+                uniqueCount+=1;
+            }
+            rightCount[target]+=1;
+            rightUniqueCount[i] = uniqueCount;
+        }
+
+        for(int i=0; i<ln-1; i++){
+            if(leftUniqueCount[i]==rightUniqueCount[i+1]){
                 answer+=1;
             }
         }
+
+        
         return answer;
     }
 
-    private Map<String, List<Integer>> slice(int idx, int[] target){
-        List<Integer> array1 = new ArrayList<Integer>();
-        List<Integer> array2 = new ArrayList<Integer>();
-        for(int i=0;i<=idx;i++){
-            array1.add(target[i]);
-        }
-        int ln = target.length;
-        for(int i=idx+1; i<ln; i++){
-            array2.add(target[i]);
-        }
-
-        Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
-        map.put("first", array1);
-        map.put("second", array2);
-        return map;
-    }
-
-    private int getUniqueCount(List<Integer> piece){
-        Set<Integer> pieceSet = new HashSet<>(piece);
-        return pieceSet.size();
-    }
+    
 }
