@@ -1,5 +1,8 @@
 class Solution {
     public boolean isUgly(int n) {
+        if(n==0){
+            return false;
+        }
         boolean ans = true;
         while(n!=1){
             if(!isDivided(n)){
