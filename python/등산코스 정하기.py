@@ -1,53 +1,44 @@
-
-from collections import defaultdict
-
-answer = []
-dist = defaultdict(list)
+from collections import deque
 
 def solution(n, paths, gates, summits):
+    summits.sort()
+
+    q = deque([])
+
+    dist = [float("inf")] * (n + 1)
+    weights = [[] for i in range(n+1)]
     
-    for path in paths:
-        x = path[0]
-        y = path[1]
-        w = path[2]
-        dist[x].append({y: w})
-        dist[y].append({x: w})
+    for p in paths:
+        start = p[0]
+        end = p[1]
+        w = p[2]
+        weights[start].append((end,w))
+        weights[end].append((start,w))
+
+    for g in gates:
+        q.append(g)
+        dist[g] = 0
     
-    visited = [0] * (n + 1)
-    
-    for gate in gates:
-        dfs(gate, gates, summits, visited, 0)
+    while q:
+        node = q.popleft()
+
+        if node in summits:
+            continue
+
+        for next_node, w in weights[node]:
+            temp_w = max(dist[node], w)
+            if dist[next_node] <= temp_w:
+                continue
+            dist[next_node] = temp_w
+            q.append(next_node)
+
+    answer = []
+    ans_node, min_w = -1, 1e9
+    for s in summits:
+        if dist[s] < min_w:
+            min_w = dist[s]
+            ans_node = s
+    answer.append(ans_node)
+    answer.append(min_w)
     return answer
 
-
-def dfs(start, starts, ends, visited, mx):
-    # print("start", start)
-    visited[start] = 1
-    
-    if start in ends:
-        if len(answer) == 0:
-            answer.append(start)
-            answer.append(mx)
-        else:
-            if mx < answer[1]:
-                answer[1] = mx
-                answer[0] = start
-            elif mx == answer[1]:
-                if answer[0] > start:
-                    answer[0] = start
-        return
-    
-    
-    for nexts in dist[start]:
-        nx = list(nexts)[0]
-        if nx in starts:
-            continue
-        w = nexts[nx]
-        if visited[nx] != 1:
-            temp_mx = mx
-            if w > mx:
-                mx = w
-            dfs(nx, starts, ends, visited, mx)
-            visited[nx] = 0
-            mx = temp_mx
-    
