@@ -5,6 +5,7 @@ class Solution {
         int[] answer = {0,0};
         
         ArrayList<ArrayList<Map<Integer, Integer>>> board = new ArrayList<ArrayList<Map<Integer, Integer>>>();
+        Arrays.sort(summits);
         
         for(int i=0; i<n+1; i++){
             ArrayList<Map<Integer, Integer>> temp = new ArrayList<Map<Integer, Integer>>();
