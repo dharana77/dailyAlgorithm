@@ -2,7 +2,7 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int n, int[][] paths, int[] gates, int[] summits) {
-        int[] answer = {};
+        int[] answer = {0,0};
         
         ArrayList<ArrayList<Map<Integer, Integer>>> board = new ArrayList<ArrayList<Map<Integer, Integer>>>();
         
@@ -41,21 +41,53 @@ class Solution {
         
         while(q.size() != 0){
             int node = q.poll();
-            // System.out.println(node);
+            // System.out.println("qnode:" + node);
+            boolean isSummit = false;
             
-            if (Arrays.asList(summits).contains(node)){
-                continue;
+            for(int i=0; i<summits.length; i++){
+                if(summits[i] == node){
+                    isSummit = true;
+                    break;
+                }
             }
+            
+            if(isSummit) continue;
             
             for(int i=0; i<board.get(node).size(); i++){
                 Map<Integer, Integer> map = board.get(node).get(i);
                 Iterator<Integer> it = map.keySet().iterator();
-                int key = it.next();
-                int value = map.get(key);
-                System.out.println(key + " " + value);
+                int nextNode = it.next();
+                int w = map.get(nextNode);
+                int currentMaxW = Math.max(w, dist[node]);
+                
+                if(dist[nextNode] > currentMaxW ){
+                    // System.out.println("addqueNode:" + nextNode);
+                    // System.out.println("maxw:" + currentMaxW);
+                    
+                    q.add(nextNode);
+                    dist[nextNode] = currentMaxW;
+                }
             }
         }
         
+        // for(int i=0; i<dist.length; i++){
+        //     System.out.println(i +":" + dist[i]);    
+        // }
+        
+        int mx = dist[summits[0]];
+        int s = summits[0];
+        // System.out.println("mx, s"+ mx +" "+ s);
+        for(int i=0; i<summits.length; i++){
+            int node = summits[i];
+            // System.out.println("node:"+node);
+            // System.out.println("dist:"+dist[node]);
+            if(dist[node] != 0 && dist[node] < mx){
+                mx = dist[node];
+                s = node;
+            }
+        }
+        answer[0] = s;
+        answer[1] = mx;
         return answer;
     }
 }
