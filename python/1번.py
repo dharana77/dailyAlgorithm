@@ -6,6 +6,7 @@ import sys
 import time
 from bisect import bisect_left
 
+
 def getMaxBarrier(initialEnergy, th):
 # Write your code here
     mx = max(initialEnergy)
@@ -13,26 +14,32 @@ def getMaxBarrier(initialEnergy, th):
     print(sum(initialEnergy))
     
     initialEnergy = sorted(initialEnergy)
-    print(initialEnergy)
-    ln = len(initialEnergy) - 1
-    current = (initialEnergy[ln] - initialEnergy[0])//2
+    mn = initialEnergy[0]
+    mx = initialEnergy[-1]
+    current = (mx - mn)//2
     print("current", current)
-    test = find_first_minus(initialEnergy, th, 0, ln, current)
-    print(test, initialEnergy[test])
-
-def find_first_minus(initialEnergy, th, start, end, current):
-    idx = bisect_left(initialEnergy, current)
-    total = sum(initialEnergy[idx:])
-    print(idx)
-    while start <= end:
-        if total < th:
-            current = initialEnergy[(start + idx)//2]
-            find_first_minus(initialEnergy, th, start, idx, current)
-        else:
-            current = initialEnergy[(idx + end)//2]
-            find_first_minus(initialEnergy, th, idx, end, current)
+    test = find_first_minus(initialEnergy, th, mn, mx)
+    print("ans:", test)
     
-    return idx
+    return test
+
+def find_first_minus(initialEnergy, th, start, end):
+    current = (start + end) // 2
+    print("current", current)
+    idx = bisect_left(initialEnergy, current)
+    print("idx:", idx)
+    total = sum(initialEnergy[idx:]) - len(initialEnergy[idx:]) * current
+    print(start , end)
+    while start <= end:
+        if (start + end)//2 == current:
+            break
+
+        if total < th:
+            find_first_minus(initialEnergy, th, start, current)
+        else:
+            find_first_minus(initialEnergy, th, current, end)
+    
+    return current
 
 
 
