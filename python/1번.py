@@ -30,12 +30,9 @@ def find_first_minus(initialEnergy, th, start, end):
     print("idx:", idx)
     total = sum(initialEnergy[idx:]) - len(initialEnergy[idx:]) * current
     print(start , end)
-    while start <= end:
-        if (start + end)//2 == current:
-            break
-
+    if start < end:
         if total < th:
-            find_first_minus(initialEnergy, th, start, current)
+            find_first_minus(initialEnergy, th, start, current-1)
         else:
             find_first_minus(initialEnergy, th, current, end)
     
@@ -45,10 +42,10 @@ def find_first_minus(initialEnergy, th, start, end):
 
 start = time.time()
 # [2,4,5,10,13]
-arr = [4,5,2,13,10]
-test = getMaxBarrier(arr, 8)
-# arr = [1000000000] * (10 ** 5)
-# test = getMaxBarrier(arr, 100)
+# arr = [4,5,2,13,10]
+# test = getMaxBarrier(arr, 8)
+arr = [1000000000] * (10 ** 5)
+test = getMaxBarrier(arr, 100)
 print(test)
 end = time.time()
 print(end - start)
