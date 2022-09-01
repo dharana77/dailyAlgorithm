@@ -14,8 +14,8 @@ def getMaxBarrier(initialEnergy, th):
     print(sum(initialEnergy))
     
     initialEnergy = sorted(initialEnergy)
-    mn = initialEnergy[0]
-    mx = initialEnergy[-1]
+    mn = 1
+    mx = 10**9
     current = (mx - mn)//2
     print("current", current)
     test = find_first_minus(initialEnergy, th, mn, mx)
@@ -23,20 +23,27 @@ def getMaxBarrier(initialEnergy, th):
     
     return test
 
+
 def find_first_minus(initialEnergy, th, start, end):
     current = (start + end) // 2
+
     print("current", current)
     idx = bisect_left(initialEnergy, current)
     print("idx:", idx)
     total = sum(initialEnergy[idx:]) - len(initialEnergy[idx:]) * current
-    print(start , end)
-    if start < end:
-        if total < th:
-            find_first_minus(initialEnergy, th, start, current-1)
-        else:
-            find_first_minus(initialEnergy, th, current, end)
+    print("start, end", start , end, current)
     
-    return current
+    if start < end:
+        if (start + 1) == end:
+            print("current3", current)
+            return current
+        if total < th:
+            print(1)
+            return find_first_minus(initialEnergy, th, start, current)
+        else:
+            print(2)
+            return find_first_minus(initialEnergy, th, current, end)
+
 
 
 
